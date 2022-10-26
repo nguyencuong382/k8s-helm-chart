@@ -1,3 +1,13 @@
 apiVersion: v1
-entries: {}
-generated: "2022-10-26T16:48:43.987871+07:00"
+entries:
+  lemon:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: "2022-10-26T17:49:57.5574562+07:00"
+    description: A Helm chart for Kubernetes
+    digest: f67cb06524fadc25bb1cb1f1dfb18ab6344cda37f10dca9bed1638de32527dbd
+    name: lemon
+    urls:
+    - https://nguyencuong382.github.io/k8s-helm-chart/lemon-1.0.0.tgz
+    version: 1.0.0
+generated: "2022-10-26T17:49:57.5569053+07:00"
