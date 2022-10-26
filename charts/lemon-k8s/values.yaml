@@ -1,0 +1,65 @@
+image:
+  pullPolicy: IfNotPresent
+  repository: 
+  tag: latest
+  imagePullSecrets:
+
+service:
+  replicaCount: 1
+  ports:
+    - name: http
+      value: 1521
+
+deployment:
+  envFrom: {}
+  environments:
+    # SAMPLE_ENV: "ENV_VALUE"
+
+secrets:
+  enabled: true
+  values:
+    - name: stm-oracle
+      data:
+        # SAMPLE_ENV: "ENV_VALUE"
+
+ingress:
+  enabled: false
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    # ingress.kubernetes.io/ssl-redirect: "False"
+    # nginx.org/websocket-services: svc-1
+  rules:
+    - host: 
+      paths:
+        - path: /
+          port: 80
+  tls:
+    - secretName:
+      hosts:
+        - 
+  
+resources:
+  limits: {}
+    # cpu: 100m
+    # memory: 2048Mi
+  requests:
+    cpu: 100m
+    memory: 2048Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+securityContext: {}
+
+pv:
+  enabled: false
+  name: ""
+  storage: 5Gi
+  storageClassName: nfs-client
+  nfs:
+    path: ""
+    server: ""
+  mountPath: ""

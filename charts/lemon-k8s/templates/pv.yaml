@@ -1,0 +1,30 @@
+{{- if and (.Values.pv) (.Values.pv.enabled) -}}
+{{- $module := .Values.service -}}
+{{- $fullName := printf "%s-%s" (include "baseName.fullname" .) ($module.name | default "") | trunc 63 | trimSuffix "-" -}}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ $fullName }}
+spec:
+  capacity:
+    storage: {{ .Values.pv.storage }}
+  accessModes:
+    - {{ .Values.pv.accessMode | default "ReadWriteOnce" }}
+  storageClassName: {{ .Values.pv.storageClassName }}
+  {{- if .Values.pv.nfs }}
+  nfs:
+    {{- toYaml .Values.pv.nfs | nindent 4 }} 
+  {{- end }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ $fullName }}
+spec:
+  storageClassName: {{ .Values.pv.storageClassName }}
+  accessModes:
+    - {{ .Values.pv.accessMode | default "ReadWriteOnce" }}
+  resources:
+    requests:
+      storage: {{ .Values.pv.storage }}
+{{- end }}
