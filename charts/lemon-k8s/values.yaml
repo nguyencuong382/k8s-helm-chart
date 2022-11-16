@@ -5,20 +5,24 @@ image:
   imagePullSecrets:
 
 service:
-  replicaCount: 1
   ports:
     - name: http
-      value: 1521
+      value: 80
 
 deployment:
+  replicaCount: 1
+  # livenessHttpGet: "/health-check"
+  # readinessHttpGet: "/health-check"
+  # failureThreshold: 3
+  # initialDelaySeconds: 0
   envFrom: {}
   environments:
     # SAMPLE_ENV: "ENV_VALUE"
 
 secrets:
-  enabled: true
+  enabled: false
   values:
-    - name: stm-oracle
+    - name: ""
       data:
         # SAMPLE_ENV: "ENV_VALUE"
 
@@ -33,10 +37,10 @@ ingress:
       paths:
         - path: /
           port: 80
-  tls:
-    - secretName:
-      hosts:
-        - 
+  # tls:
+  #   - secretName:
+  #     hosts:
+  #       - 
   
 resources:
   limits: {}
@@ -54,12 +58,20 @@ affinity: {}
 
 securityContext: {}
 
+pvc:
+  enabled: false
+  # name: "lemon"
+  # storage: 5Gi
+  # storageClassName: storage-class-name
+  # accessMode: ReadWriteOnce
+  # mountPath: ""
+
 pv:
   enabled: false
-  name: ""
-  storage: 5Gi
-  storageClassName: nfs-client
-  nfs:
-    path: ""
-    server: ""
-  mountPath: ""
+  # name: "lemon"
+  # storage: 5Gi
+  # storageClassName: storage-class-name
+  # accessMode: ReadWriteOnce
+  # nfs:
+  #   path: ""
+  #   server: ""

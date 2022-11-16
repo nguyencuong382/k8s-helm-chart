@@ -1,0 +1,65 @@
+image:
+  pullPolicy: IfNotPresent
+  repository: doctorkirk/oracle-19c
+  tag: latest
+  imagePullSecrets:
+
+service:
+  ports:
+    - name: http
+      value: 1521
+
+deployment:
+  replicaCount: 1
+  envFrom: {}
+  environments:
+    ORACLE_CHARACTERSET: "AL32UTF8"
+    ENABLE_ARCHIVELOG: "false"
+    ORACLE_EDITION: "enterprise"
+    # ORACLE_SID: ""
+
+secret:
+  enabled: true
+  # name: stm-oracle
+  data:
+    ORACLE_PWD: "#Oracal123"
+
+ingress:
+  enabled: false
+  
+resources:
+  limits: {}
+    # cpu: 100m
+    # memory: 2048Mi
+  requests:
+    cpu: 100m
+    memory: 2048Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+securityContext:
+  runAsUser: 54321
+  fsGroup: 54321
+
+
+pvc:
+  enabled: true
+  # name: "stm-oracle"
+  storage: 5Gi
+  storageClassName: nfs-client
+  accessMode: ReadWriteOnce
+  mountPath: "/opt/oracle/oradata"
+
+pv:
+  enabled: true
+  # name: "stm-oracle"
+  storage: 5Gi
+  storageClassName: nfs-client
+  accessMode: ReadWriteOnce
+  nfs:
+    path: "/mnt/nfs_share"
+    server: "10.10.20.34"

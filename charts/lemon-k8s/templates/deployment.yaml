@@ -12,7 +12,7 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
-  replicas: {{ $module.replicaCount | default 1 }}
+  replicas: {{ .Values.deployment.replicaCount | default 1 }}
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ $name }}
@@ -45,34 +45,32 @@ spec:
             {{- if .Values.volumeMounts }}
             {{- toYaml .Values.volumeMounts | default "" | nindent 12 }} 
             {{- end }}
-            {{- if and (.Values.pv) (.Values.pv.enabled) }}
+            {{- if and (.Values.pvc) (.Values.pvc.enabled) }}
             - name: {{ $fullName }}
-              mountPath: {{ .Values.pv.mountPath }}
+              mountPath: {{ .Values.pvc.mountPath }}
             {{- end }}
-          {{ if $module.livenessHttpGet }}
+          {{ if .Values.deployment.livenessHttpGet }}
           livenessProbe:
             httpGet:
-              path: {{ $module.livenessHttpGet }}
+              path: {{ .Values.deployment.livenessHttpGet }}
               port: http
-            initialDelaySeconds: {{ $module.initialDelaySeconds | default 0 }}
-            failureThreshold: {{ $module.failureThreshold | default 3 }}
+            initialDelaySeconds: {{ .Values.deployment.initialDelaySeconds | default 0 }}
+            failureThreshold: {{ .Values.deployment.failureThreshold | default 3 }}
           readinessProbe:
             httpGet:
-              path: {{ $module.readinessHttpGet | default $module.livenessHttpGet }}
+              path: {{ .Values.deployment.readinessHttpGet | default .Values.deployment.livenessHttpGet }}
               port: http
-            initialDelaySeconds: {{ $module.initialDelaySeconds | default 0 }}
+            initialDelaySeconds: {{ .Values.deployment.initialDelaySeconds | default 0 }}
           {{ end }}
           env:
             {{- include "common.env" . | indent 12 }}
-            {{- if .Values.envFrom }}
-            {{- toYaml .Values.envFrom | nindent 12 }} 
+            {{- if .Values.deployment.envFrom }}
+            {{- toYaml .Values.deployment.envFrom | nindent 12 }} 
             {{- end }}
           envFrom:
-            {{- if and (.Values.secrets) (.Values.secrets.enabled) -}}
-            {{- range $_, $secret := .Values.secrets.values }}
+            {{- if and (.Values.secret) (.Values.secret.enabled) }}
             - secretRef:
-                name: {{ $secret.name }}
-            {{- end }}
+                name: {{ .Values.secret.name | default $fullName }}
             {{- end }}
           resources:
           {{- if .Values.resources }}
@@ -94,7 +92,7 @@ spec:
       {{- if .Values.volumes }}
       {{- toYaml .Values.volumes | default "" | nindent 8 }} 
       {{- end }}
-      {{- if and (.Values.pv) (.Values.pv.enabled) }}
+      {{- if and (.Values.pvc) (.Values.pvc.enabled) }}
       - name: {{ $fullName }}
         persistentVolumeClaim:
           claimName: {{ $fullName }}

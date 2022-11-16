@@ -4,7 +4,7 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: {{ $fullName }}
+  name: {{ .Values.pv.name | default $fullName }}
 spec:
   capacity:
     storage: {{ .Values.pv.storage }}
@@ -15,16 +15,4 @@ spec:
   nfs:
     {{- toYaml .Values.pv.nfs | nindent 4 }} 
   {{- end }}
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: {{ $fullName }}
-spec:
-  storageClassName: {{ .Values.pv.storageClassName }}
-  accessModes:
-    - {{ .Values.pv.accessMode | default "ReadWriteOnce" }}
-  resources:
-    requests:
-      storage: {{ .Values.pv.storage }}
 {{- end }}
