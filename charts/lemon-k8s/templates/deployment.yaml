@@ -42,8 +42,8 @@ spec:
               protocol: TCP
             {{- end }}
           volumeMounts:
-            {{- if .Values.volumeMounts }}
-            {{- toYaml .Values.volumeMounts | default "" | nindent 12 }} 
+            {{- if .Values.deployment.volumeMounts }}
+            {{- toYaml .Values.deployment.volumeMounts | default "" | nindent 12 }} 
             {{- end }}
             {{- if and (.Values.pvc) (.Values.pvc.enabled) }}
             - name: {{ $fullName }}
@@ -89,8 +89,8 @@ spec:
 {{ toYaml . | indent 8 }}
     {{- end }}
       volumes:
-      {{- if .Values.volumes }}
-      {{- toYaml .Values.volumes | default "" | nindent 8 }} 
+      {{- if .Values.deployment.volumes }}
+      {{- toYaml .Values.deployment.volumes | default "" | nindent 8 }} 
       {{- end }}
       {{- if and (.Values.pvc) (.Values.pvc.enabled) }}
       - name: {{ $fullName }}
