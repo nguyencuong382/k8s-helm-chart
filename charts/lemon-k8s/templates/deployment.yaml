@@ -54,12 +54,14 @@ spec:
             httpGet:
               path: {{ .Values.deployment.livenessHttpGet }}
               port: http
+              scheme: {{ $module.scheme | default "HTTP"  }}
             initialDelaySeconds: {{ .Values.deployment.initialDelaySeconds | default 0 }}
             failureThreshold: {{ .Values.deployment.failureThreshold | default 3 }}
           readinessProbe:
             httpGet:
               path: {{ .Values.deployment.readinessHttpGet | default .Values.deployment.livenessHttpGet }}
               port: http
+              scheme: {{ $module.scheme | default "HTTP"  }}
             initialDelaySeconds: {{ .Values.deployment.initialDelaySeconds | default 0 }}
           {{ end }}
           env:
