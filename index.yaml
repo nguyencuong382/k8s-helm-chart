@@ -3,7 +3,16 @@ entries:
   lemon:
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2023-03-22T16:10:00.9046251+07:00"
+    created: "2023-03-22T16:12:34.4184265+07:00"
+    description: A Helm chart for Kubernetes
+    digest: 08b4857d8738a76f463e6ba0485b875fcec3dad1649996de6189080185ac9cbb
+    name: lemon
+    urls:
+    - https://nguyencuong382.github.io/k8s-helm-chart/lemon-1.0.4.tgz
+    version: 1.0.4
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: "2023-03-22T16:12:34.4179116+07:00"
     description: A Helm chart for Kubernetes
     digest: 4c080865698bb61d809c539a0e1cd120a436dfe9b652d9fd5fcae65e1b0af5d8
     name: lemon
@@ -12,7 +21,7 @@ entries:
     version: 1.0.3
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2023-03-22T16:10:00.904461+07:00"
+    created: "2023-03-22T16:12:34.4168582+07:00"
     description: A Helm chart for Kubernetes
     digest: 08d0f712c14402bebf2ae63606f58b282722049c41169cb3fc012713278ec1ac
     name: lemon
@@ -21,7 +30,7 @@ entries:
     version: 1.0.2
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2023-03-22T16:10:00.8970751+07:00"
+    created: "2023-03-22T16:12:34.4162902+07:00"
     description: A Helm chart for Kubernetes
     digest: b7c273ab341f12ede70b828c791026eab4865263f16e98d1921b40da3803c22f
     name: lemon
@@ -30,11 +39,11 @@ entries:
     version: 1.0.1
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2023-03-22T16:10:00.8926351+07:00"
+    created: "2023-03-22T16:12:34.4157166+07:00"
     description: A Helm chart for Kubernetes
     digest: 912ccbdb3ef2a383264f847f04bb2bd51b0dea76d42b629a70acd3cb72bf2679
     name: lemon
     urls:
     - https://nguyencuong382.github.io/k8s-helm-chart/lemon-1.0.0.tgz
     version: 1.0.0
-generated: "2023-03-22T16:10:00.8870633+07:00"
+generated: "2023-03-22T16:12:34.4136016+07:00"

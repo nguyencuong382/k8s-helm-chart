@@ -1,0 +1,26 @@
+{{- if and (.Values.nodeport) (.Values.nodeport.enabled) -}}
+{{- $module := .Values.service -}}
+{{- $fullName := printf "%s-%s" (include "baseName.fullname" .) ($module.name | default "") | trunc 63 | trimSuffix "-" -}}
+{{- $name := printf "%s%s" (include "baseName.name" .) "" -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $fullName }}-nodeport
+  labels:
+    app.kubernetes.io/name: {{ $name }}
+    helm.sh/chart: {{ include "baseName.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  ports:
+    {{- range $_, $port := .Values.service.ports }}
+    - name: {{ $port.name }}
+      port: {{ $port.value }}
+      targetPort: {{ $port.value }}
+      nodePort: {{ $port.nodePort }}
+    {{- end }}
+  selector:
+    app.kubernetes.io/name: {{ $name }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+  type: NodePort
+{{- end }}
