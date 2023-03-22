@@ -95,9 +95,9 @@ spec:
       {{- toYaml .Values.deployment.volumes | default "" | nindent 8 }} 
       {{- end }}
       {{- if and (.Values.pvc) (.Values.pvc.enabled) }}
-      - name: {{ $fullName }}
-        persistentVolumeClaim:
-          claimName: {{ $fullName }}
+        - name: {{ $fullName }}
+          persistentVolumeClaim:
+            claimName: {{ $fullName }}
       {{- end }}
 {{- end -}}
 
