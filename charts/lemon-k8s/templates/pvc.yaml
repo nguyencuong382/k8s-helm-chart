@@ -6,6 +6,9 @@ kind: PersistentVolumeClaim
 metadata:
   name: {{ .Values.pvc.name | default $fullName }}
 spec:
+  {{- if and (.Values.pv) (.Values.pv.enabled) }}
+  volumeName: "{{ .Values.pv.name | default $fullName }}-{{ .Release.Namespace }}"
+  {{- end }}
   storageClassName: {{ .Values.pvc.storageClassName }}
   accessModes:
     - {{ .Values.pvc.accessMode | default "ReadWriteOnce" }}
