@@ -35,6 +35,10 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ $module.imageTag | default .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if .Values.deployment.args }}
+          args:
+          {{- toYaml .Values.deployment.args | nindent 12 }} 
+          {{- end }}
           ports:
             {{- range $_, $port := .Values.service.ports }}
             - name: {{ $port.name }}

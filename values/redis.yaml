@@ -1,0 +1,41 @@
+image:
+  repository: redis
+  tag: 6.0.4
+  pullPolicy: IfNotPresent
+
+service:
+  ports:
+    - name: http
+      value: 6379
+      nodePort: 6379
+
+deployment:
+  replicaCount: 1
+  args: ["--requirepass", "SECRET"]
+
+secret:
+  enabled: false
+
+ingress:
+  enabled: false
+  
+resources:
+  limits:
+  requests:
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+securityContext: {}   
+
+pvc:
+  enabled: false
+
+pv:
+  enabled: true
+
+nodeport:
+  enabled: false
