@@ -12,13 +12,22 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
+  {{- if $module.headless }}
+  clusterIP: None
+  {{- else if eq $module.type "NodePort" }}
+  type: NodePort
+  {{- else }}
   type: ClusterIP
+  {{- end }}
   ports:
-    {{- range $_, $port := .Values.service.ports }}
+    {{- range $_, $port := $module.ports }}
     - name: {{ $port.name }}
       port: {{ $port.value }}
       targetPort: {{ $port.value }}
       protocol: TCP
+      {{- if eq $module.type "NodePort" }}
+      nodePort: {{ $port.nodePort | default 0 }}
+      {{- end }}
     {{- end }}
   selector:
     app.kubernetes.io/name: {{ $name }}
