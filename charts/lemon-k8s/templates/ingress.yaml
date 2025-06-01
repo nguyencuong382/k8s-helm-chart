@@ -36,11 +36,16 @@ spec:
           {{- range $hostKey, $path := $rule.paths }}
           - path: {{ $path.path }}
             pathType: Prefix
+            {{- if $path.backend }}
+            backend:
+{{ toYaml $path.backend | indent 14 }}
+            {{- else }}
             backend:
               service:
                 name: {{ printf "%s-%s" $fullName ($rule.module| default "") | trunc 63 | trimSuffix "-" }}
                 port:
                   number: {{ $path.port | default 80 }}
+            {{- end }}
   {{- end }}
   {{- end }}
 {{- end }}
