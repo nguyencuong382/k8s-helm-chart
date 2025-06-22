@@ -78,7 +78,7 @@ affinity: {}
 securityContext: {}
 
 pvc:
-  enabled: true
+  enabled: false
   # name: "lemon"
   # storage: 5Gi
   # storageClassName: storage-class-name
