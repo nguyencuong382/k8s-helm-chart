@@ -1,5 +1,4 @@
 {{- $module := .Values.service -}}
-{{- if or ($module.imageTag) (.Values.image.tag) -}}
 {{- $fullName := printf "%s-%s" (include "baseName.fullname" .) ($module.name | default "") | trunc 63 | trimSuffix "-" -}}
 {{- $name := printf "%s-%s" (include "baseName.name" .) ($module.name | default "") | trunc 63 | trimSuffix "-" -}}
 apiVersion: apps/v1
@@ -29,65 +28,25 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      {{- if .Values.image.imagePullSecrets }}
+      {{- if .Values.global.image.pu }}
       imagePullSecrets:
-       - name: {{ .Values.image.imagePullSecrets }} 
+       - name: {{ .Values.global.image.imagePullSecret }} 
       {{- end }}
       {{- if .Values.securityContext }}
       securityContext:
       {{- toYaml .Values.securityContext | nindent 8 }} 
       {{- end }}
       containers:
-        - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ $module.imageTag | default .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          {{- if .Values.deployment.args }}
-          args:
-          {{- toYaml .Values.deployment.args | nindent 12 }} 
-          {{- end }}
-          ports:
-            {{- range $_, $port := .Values.service.ports }}
-            - name: {{ $port.name }}
-              containerPort: {{ $port.value }}
-              protocol: TCP
-            {{- end }}
-          volumeMounts:
-            {{- if .Values.deployment.volumeMounts }}
-            {{- toYaml .Values.deployment.volumeMounts | default "" | nindent 12 }} 
-            {{- end }}
-            {{- if and (.Values.pvc) (.Values.pvc.enabled) }}
-            - name: {{ $fullName }}
-              mountPath: {{ .Values.pvc.mountPath }}
-            {{- end }}
-          {{ if .Values.deployment.livenessHttpGet }}
-          livenessProbe:
-            httpGet:
-              path: {{ .Values.deployment.livenessHttpGet }}
-              port: http
-              scheme: {{ .Values.deployment.scheme | default "HTTP"  }}
-            initialDelaySeconds: {{ .Values.deployment.initialDelaySeconds | default 0 }}
-            failureThreshold: {{ .Values.deployment.failureThreshold | default 3 }}
-          readinessProbe:
-            httpGet:
-              path: {{ .Values.deployment.readinessHttpGet | default .Values.deployment.livenessHttpGet }}
-              port: http
-              scheme: {{ .Values.deployment.scheme | default "HTTP"  }}
-            initialDelaySeconds: {{ .Values.deployment.initialDelaySeconds | default 0 }}
-          {{ end }}
-          env:
-            {{- include "common.env" . | indent 12 }}
-            {{- if .Values.deployment.envFrom }}
-            {{- toYaml .Values.deployment.envFrom | nindent 12 }} 
-            {{- end }}
-          envFrom:
-            {{- if and (.Values.secret) (.Values.secret.enabled) }}
-            - secretRef:
-                name: {{ .Values.secret.name | default $fullName }}
-            {{- end }}
-          resources:
-          {{- if .Values.resources }}
-          {{- toYaml .Values.resources | default "" | nindent 12 }} 
-          {{- end }}
+        {{- if .Values.deployment.containers }}
+        {{- range $container := .Values.deployment.containers }}
+            {{- include "lemon-k8s.containerBody" (dict "root" $ "Values" $.Values "container" $container) | nindent 8 }}
+        {{- end }}
+        {{- else }}
+        - name: fallback-container
+          image: busybox
+          command: [ "sleep", "3600" ]
+        {{- end }}
+    
     {{- with .Values.nodeSelector }}
       nodeSelector:
 {{ toYaml . | indent 8 }}
@@ -109,5 +68,4 @@ spec:
           persistentVolumeClaim:
             claimName: {{ $fullName }}
       {{- end }}
-{{- end -}}
 

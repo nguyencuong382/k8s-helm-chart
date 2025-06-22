@@ -1,7 +1,12 @@
-image:
-  repository: redis
-  tag: 6.0.4
-  pullPolicy: IfNotPresent
+global:
+  image:
+    repository: redis
+    pullPolicy: IfNotPresent
+
+containers:
+  - name: main
+    repository: redis
+    tag: latest
 
 service:
   ports:
@@ -18,7 +23,7 @@ secret:
 
 ingress:
   enabled: false
-  
+
 resources:
   limits:
   requests:
@@ -29,13 +34,15 @@ tolerations: []
 
 affinity: {}
 
-securityContext: {}   
+securityContext: {}
 
 pvc:
   enabled: false
 
 pv:
   enabled: true
+  storage: 5Gi
+  storageClassName: nfs-client
 
 nodeport:
   enabled: false

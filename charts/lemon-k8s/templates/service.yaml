@@ -1,5 +1,5 @@
 {{- $module := .Values.service -}}
-{{- if or ($module.imageTag) (.Values.image.tag) -}}
+{{- if .Values.deployment -}}
 {{- $fullName := printf "%s-%s" (include "baseName.fullname" .) ($module.name | default "") | trunc 63 | trimSuffix "-" -}}
 {{- $name := printf "%s-%s" (include "baseName.name" .) ($module.name | default "") | trunc 63 | trimSuffix "-" -}}
 apiVersion: v1
@@ -20,14 +20,16 @@ spec:
   type: ClusterIP
   {{- end }}
   ports:
-    {{- range $_, $port := $module.ports }}
-    - name: {{ $port.name }}
+    {{- range $container := .Values.deployment.containers }}
+    {{- range $port := $container.ports }}
+    - name: {{ $container.name }}-{{ $port.name }}
       port: {{ $port.value }}
       targetPort: {{ $port.value }}
       protocol: TCP
       {{- if eq $module.type "NodePort" }}
       nodePort: {{ $port.nodePort | default 0 }}
       {{- end }}
+    {{- end }}
     {{- end }}
   selector:
     app.kubernetes.io/name: {{ $name }}

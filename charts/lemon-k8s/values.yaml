@@ -1,8 +1,8 @@
-image:
-  pullPolicy: IfNotPresent
-  repository: 
-  tag: latest
-  imagePullSecrets:
+global:
+  image:
+    registry: docker.io
+    pullPolicy: IfNotPresent
+    imagePullSecret: ""
 
 service:
   ports:
@@ -11,15 +11,38 @@ service:
 
 deployment:
   replicaCount: 1
+  containers:
+    - name: main
+      repository: your-image-repo/lemon-k8s
+      tag: latest
+      resources:
+        limits:
+          cpu: 1000m
+          memory: 1280Mi
+        requests:
+          cpu: 100m
+          memory: 128Mi
+
+    - name: sidecar
+      repository: busybox
+      tag: latest
+      resources:
+        limits:
+          cpu: 1000m
+          memory: 1280Mi
+        requests:
+          cpu: 100m
+          memory: 128Mi
   # livenessHttpGet: "/health-check"
   # readinessHttpGet: "/health-check"
   # failureThreshold: 3
   # initialDelaySeconds: 0
+  labels: {}
   volumes: {}
   volumeMounts: {}
   # envFrom: {}
   environments:
-    # SAMPLE_ENV: "ENV_VALUE"
+    HELM_CHART_NAME: lemon-k8s
 
 secrets:
   enabled: false
@@ -30,27 +53,21 @@ secrets:
 
 ingress:
   enabled: false
+  ingressClassName: nginx
   annotations:
-    kubernetes.io/ingress.class: nginx
+    # decrepcated
+    # kubernetes.io/ingress.class: nginx
     # ingress.kubernetes.io/ssl-redirect: "False"
     # nginx.org/websocket-services: svc-1
   rules:
-    - host: 
+    - host:
       paths:
         - path: /
           port: 80
   # tls:
   #   - secretName:
   #     hosts:
-  #       - 
-  
-resources:
-  limits: {}
-    # cpu: 100m
-    # memory: 2048Mi
-  requests:
-    cpu: 100m
-    memory: 2048Mi
+  #       -
 
 nodeSelector: {}
 
@@ -61,7 +78,7 @@ affinity: {}
 securityContext: {}
 
 pvc:
-  enabled: false
+  enabled: true
   # name: "lemon"
   # storage: 5Gi
   # storageClassName: storage-class-name

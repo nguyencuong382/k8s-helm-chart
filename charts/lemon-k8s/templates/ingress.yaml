@@ -1,5 +1,3 @@
-{{- $module := .Values.service -}}
-{{- if or ($module.imageTag) (.Values.image.tag) -}}
 {{- if .Values.ingress.enabled -}}
 {{- $fullName := printf "%s%s" (include "baseName.fullname" .) "" -}}
 {{- $name := printf "%s%s" (include "baseName.name" .) "" -}}
@@ -48,5 +46,4 @@ spec:
             {{- end }}
   {{- end }}
   {{- end }}
-{{- end }}
 {{- end }}
