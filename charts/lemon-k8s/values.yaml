@@ -2,7 +2,7 @@ global:
   image:
     registry: docker.io
     pullPolicy: IfNotPresent
-    imagePullSecret: ""
+    pullSecret: ""
 
 service:
   ports:

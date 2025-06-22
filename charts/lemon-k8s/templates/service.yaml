@@ -26,8 +26,8 @@ spec:
       port: {{ $port.value }}
       targetPort: {{ $port.value }}
       protocol: TCP
-      {{- if eq $module.type "NodePort" }}
-      nodePort: {{ $port.nodePort | default 0 }}
+      {{- if and ($port.nodePort) (eq $module.type "NodePort") }}
+      nodePort: {{ $port.nodePort }}
       {{- end }}
     {{- end }}
     {{- end }}

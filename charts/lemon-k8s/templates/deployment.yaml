@@ -30,7 +30,7 @@ spec:
     spec:
       {{- if .Values.global.image.pu }}
       imagePullSecrets:
-       - name: {{ .Values.global.image.imagePullSecret }} 
+       - name: {{ .Values.global.image.pullSecret }} 
       {{- end }}
       {{- if .Values.securityContext }}
       securityContext:
