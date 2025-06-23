@@ -11,6 +11,7 @@ metadata:
     helm.sh/chart: {{ include "baseName.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
+    {{- include "common.labels" .Values.global | nindent 4 }}
 spec:
   {{- if $module.headless }}
   clusterIP: None

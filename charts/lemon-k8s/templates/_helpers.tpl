@@ -62,3 +62,10 @@
 {{- end }}
 {{- end }}
 {{- end }}
+
+
+{{- define "common.labels" }}
+{{- with .labels }}
+{{- toYaml . }}
+{{- end }}
+{{- end }}
