@@ -19,7 +19,7 @@
 # Common helpers
 #======================================
 {{- define "common.env" }}
-{{- range $key, $value := .Values.deployment.environments }}
+{{- range $key, $value := .environments }}
 - name: "{{ $key }}"
   value: "{{ $value }}"
 {{- end }}

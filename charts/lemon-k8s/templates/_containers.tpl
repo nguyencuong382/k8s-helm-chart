@@ -42,10 +42,11 @@
   {{- end }}
 
   env:
-  {{- include "common.env" . | indent 4 }}
+  {{- include "common.env" .Values.deployment | indent 4 }}
   {{- if .Values.deployment.envFrom }}
   {{- toYaml .Values.deployment.envFrom | nindent 4 }}
   {{- end }}
+  {{- include "common.env" .container | indent 4 }}
 
   {{- if and (.Values.secret) (.Values.secret.enabled) }}
   envFrom:
