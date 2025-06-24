@@ -23,7 +23,7 @@ spec:
   ports:
     {{- range $container := .Values.deployment.containers }}
     {{- range $port := $container.ports }}
-    - name: {{ $container.name }}-{{ $port.name }}
+    - name: {{ $.Values.global.project }}-{{ $container.name }}-{{ $port.name }}
       port: {{ $port.value }}
       targetPort: {{ $port.value }}
       protocol: TCP

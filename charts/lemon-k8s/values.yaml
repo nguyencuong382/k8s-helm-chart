@@ -1,4 +1,5 @@
 global:
+  project: ""
   image:
     registry: docker.io
     pullPolicy: IfNotPresent

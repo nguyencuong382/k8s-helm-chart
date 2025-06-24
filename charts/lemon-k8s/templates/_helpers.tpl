@@ -65,7 +65,12 @@
 
 
 {{- define "common.labels" }}
+{{- if (hasKey . "project") }}
+app.kubernetes.io/part-of: {{ .project }}
+{{- end }}
+{{- if (hasKey . "labels") }}
 {{- with .labels }}
-{{- toYaml . }}
+{{- toYaml . | nindent 0 }}
+{{- end }}
 {{- end }}
 {{- end }}
