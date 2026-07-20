@@ -11,7 +11,9 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
-  replicas: {{ .Values.deployment.replicaCount | default 1 }}
+  {{- /* `default 1` swallows an explicit 0 (Go templates treat 0 as empty), so
+         scaling to zero via values was impossible. Only fall back when unset. */}}
+  replicas: {{ if kindIs "invalid" .Values.deployment.replicaCount }}1{{ else }}{{ .Values.deployment.replicaCount }}{{ end }}
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ $name }}
