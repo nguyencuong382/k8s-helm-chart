@@ -3,6 +3,24 @@
 - name: {{ .container.name }}
   image: "{{ .Values.global.image.registry }}/{{ .container.repository }}:{{ .container.tag }}"
   imagePullPolicy: {{ $.Values.global.image.pullPolicy }}
+  {{/*
+    command — chọn CHƯƠNG TRÌNH nào chạy trong ảnh.
+
+    Cần vì quy ước MỘT KHO = MỘT DOCKERFILE = MỘT ẢNH: mọi cmd của kho nằm chung
+    một ảnh, nơi triển khai khai rõ chạy cái nào. Ví dụ:
+        command: [".venv/bin/python", "-m", "cmd.summary.main"]
+
+    Thay cho lối cũ ENV `CMD_MODULE` — ảnh tự đọc biến rồi tự chọn. Khác biệt:
+    argv sai thì container chết NGAY lúc khởi động ("No module named ..."), còn
+    ENV sai thì dễ rơi vào nhánh mặc định và chạy nhầm chương trình trong im lặng.
+    Hỏng to tiếng hơn hỏng lặng lẽ.
+
+    KHÔNG khai ⇒ dùng CMD mặc định trong Dockerfile (giữ nguyên hành vi cũ, nên
+    thêm trường này KHÔNG phá bất kỳ values nào đang chạy).
+  */}}{{- with .container.command }}
+  command:
+  {{- toYaml . | nindent 2 }}
+  {{- end }}
 
   {{- if .Values.deployment.args }}
   args:
