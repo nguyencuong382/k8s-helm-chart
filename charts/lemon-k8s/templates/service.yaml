@@ -20,6 +20,9 @@ spec:
   {{- else }}
   type: ClusterIP
   {{- end }}
+  {{- if $module.publishNotReadyAddresses }}
+  publishNotReadyAddresses: true
+  {{- end }}
   ports:
     {{- range $container := .Values.deployment.containers }}
     {{- range $port := $container.ports }}
