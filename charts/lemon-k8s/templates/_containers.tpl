@@ -43,6 +43,8 @@
       mountPath: {{ .Values.pvc.mountPath }}
   {{- end }}
 
+  {{- /* probeTimeoutSeconds / probePeriodSeconds (1.1.8): TUỲ CHỌN, áp cho cả liveness lẫn readiness. KHÔNG khai ⇒ không
+         render khoá ⇒ k8s mặc định 1s / 10s, manifest app cũ y hệt bản trước (0 khác biệt). */}}
   {{- if .container.livenessHttpGet }}
   livenessProbe:
     httpGet:
@@ -51,12 +53,24 @@
       scheme: {{ .container.scheme | default "HTTP" }}
     initialDelaySeconds: {{ .container.initialDelaySeconds | default 0 }}
     failureThreshold: {{ .container.failureThreshold | default 3 }}
+    {{- with .container.probeTimeoutSeconds }}
+    timeoutSeconds: {{ . }}
+    {{- end }}
+    {{- with .container.probePeriodSeconds }}
+    periodSeconds: {{ . }}
+    {{- end }}
   readinessProbe:
     httpGet:
       path: {{ .container.readinessHttpGet | default .container.livenessHttpGet }}
       port: http
       scheme: {{ .container.scheme | default "HTTP" }}
     initialDelaySeconds: {{ .container.initialDelaySeconds | default 0 }}
+    {{- with .container.probeTimeoutSeconds }}
+    timeoutSeconds: {{ . }}
+    {{- end }}
+    {{- with .container.probePeriodSeconds }}
+    periodSeconds: {{ . }}
+    {{- end }}
   {{- end }}
 
   env:
