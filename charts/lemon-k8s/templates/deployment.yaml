@@ -32,6 +32,11 @@ spec:
       imagePullSecrets:
        - name: {{ .Values.global.image.pullSecret }} 
       {{- end }}
+      {{- /* terminationGracePeriodSeconds (1.1.9): TUỲ CHỌN — app cần drain lâu hơn 30 s mặc định (agent Aegra đợi run
+             chat xong). KHÔNG khai ⇒ không render khoá ⇒ manifest app cũ y hệt 1.1.8. */}}
+      {{- with .Values.deployment.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ . }}
+      {{- end }}
       {{- if .Values.securityContext }}
       securityContext:
       {{- toYaml .Values.securityContext | nindent 8 }} 

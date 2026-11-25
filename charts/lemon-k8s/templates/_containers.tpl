@@ -86,6 +86,13 @@
         name: {{ .Values.secret.name | default $fullName }}
   {{- end }}
 
+  {{- /* lifecycle (1.1.9): TUỲ CHỌN, chép nguyên khối (vd `preStop.exec.command: ["sleep", "5"]` — đợi Service gỡ
+         endpoint trước SIGTERM). KHÔNG khai ⇒ không render khoá. */}}
+  {{- with .container.lifecycle }}
+  lifecycle:
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+
   {{- if .container.resources }}
   resources:
   {{- toYaml .container.resources | nindent 4 }}
